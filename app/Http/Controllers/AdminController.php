@@ -124,6 +124,14 @@ class AdminController extends Controller
             Log::info('Uploading image for new product...');
             Log::info('Supabase Config Bucket: ' . config('filesystems.disks.supabase.bucket'));
             Log::info('Supabase Config Region: ' . config('filesystems.disks.supabase.region'));
+            
+            $key = config('filesystems.disks.supabase.key');
+            Log::info('Supabase Key First 3 Chars: ' . substr($key, 0, 3));
+            Log::info('Supabase Key Length: ' . strlen($key));
+            if (str_starts_with($key, 'ey')) {
+                Log::error('CRITICAL: Access Key looks like a JWT (starts with ey). You copied the WRONG key! Use S3 Access Keys from Storage Settings.');
+            }
+
             Log::info('Supabase Config Endpoint: ' . config('filesystems.disks.supabase.endpoint'));
             try {
                 $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
