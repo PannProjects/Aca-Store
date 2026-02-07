@@ -121,7 +121,16 @@ class AdminController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('gambar')) {
-            $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
+            Log::info('Uploading image for new product...');
+            try {
+                $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
+                Log::info('Upload success, path: ' . $imagePath);
+            } catch (\Exception $e) {
+                Log::error('Upload failed: ' . $e->getMessage());
+                return back()->withErrors(['gambar' => 'Upload failed: ' . $e->getMessage()]);
+            }
+        } else {
+            Log::info('No image file in request for new product.');
         }
 
         $produk = Produk::create([

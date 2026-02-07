@@ -68,6 +68,7 @@ return [
             'bucket' => env('SUPABASE_STORAGE_BUCKET', 'produk_images'),
             'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
             'url' => env('SUPABASE_STORAGE_URL'), // Custom URL for public access
+            'visibility' => 'public',
             'use_path_style_endpoint' => true,
             'throw' => false,
         ],
