@@ -41,7 +41,13 @@ class Produk extends Model
             return $this->lokasi_gambar;
         }
 
-        // Check if using Supabase disk
+        // Cek dulu apakah file ada di storage lokal (file lama)
+        // Path fisik di Vercel: /var/task/user/storage/app/public/...
+        if (file_exists(storage_path('app/public/' . $this->lokasi_gambar))) {
+             return asset('storage/' . $this->lokasi_gambar);
+        }
+
+        // Jika tidak ada di lokal, asumsi ini file baru di Supabase
         if (config('filesystems.disks.supabase.bucket')) {
              return config('filesystems.disks.supabase.url') . '/' . config('filesystems.disks.supabase.bucket') . '/' . $this->lokasi_gambar;
         }
