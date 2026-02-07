@@ -65,7 +65,7 @@ return [
             'key' => env('SUPABASE_STORAGE_KEY'),
             'secret' => env('SUPABASE_STORAGE_SECRET'),
             'region' => env('SUPABASE_STORAGE_REGION', 'ap-southeast-1'),
-            'bucket' => env('SUPABASE_STORAGE_BUCKET'),
+            'bucket' => env('SUPABASE_STORAGE_BUCKET', 'produk_images'),
             'endpoint' => env('SUPABASE_STORAGE_ENDPOINT'),
             'url' => env('SUPABASE_STORAGE_URL'), // Custom URL for public access
             'use_path_style_endpoint' => true,
