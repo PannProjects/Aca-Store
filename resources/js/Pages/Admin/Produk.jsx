@@ -146,7 +146,7 @@ export default function Produk({ produks }) {
                         <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-700 relative overflow-hidden">
                             {produk.lokasi_gambar ? (
                                 <img
-                                    src={`/storage/${produk.lokasi_gambar}`}
+                                    src={produk.lokasi_gambar_url}
                                     alt={produk.nama}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                 />

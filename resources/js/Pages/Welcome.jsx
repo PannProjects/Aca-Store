@@ -137,7 +137,7 @@ export default function Welcome({ produks }) {
                                     <div className="w-full h-full bg-slate-100 dark:bg-slate-900 relative">
                                         {produk.lokasi_gambar ? (
                                             <img
-                                                src={`/storage/${produk.lokasi_gambar}`}
+                                                src={produk.lokasi_gambar_url}
                                                 alt={produk.nama}
                                                 className={`w-full h-full object-cover transition-transform duration-700 ${produk.is_active ? 'group-hover:scale-110' : ''}`}
                                             />

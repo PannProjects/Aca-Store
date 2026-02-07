@@ -44,7 +44,7 @@ export default function Show({ produk, avgRating }) {
                                 <div className="aspect-square bg-slate-100 dark:bg-slate-900 relative">
                                     {produk?.lokasi_gambar ? (
                                         <img
-                                            src={`/storage/${produk.lokasi_gambar}`}
+                                            src={produk.lokasi_gambar_url}
                                             alt={produk.nama}
                                             className="w-full h-full object-cover"
                                         />

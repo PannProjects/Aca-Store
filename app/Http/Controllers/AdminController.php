@@ -121,7 +121,7 @@ class AdminController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('gambar')) {
-            $imagePath = $request->file('gambar')->store('produk_images', 'public');
+            $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
         }
 
         $produk = Produk::create([
