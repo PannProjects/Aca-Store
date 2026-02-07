@@ -1,94 +1,137 @@
-# Panduan Deployment: Vercel + Supabase
+# 🚀 Panduan Lengkap Deployment: Vercel + Supabase
 
-Panduan ini akan membantu Anda mengonlinekan project Laravel BerkahStore menggunakan hosting gratis Vercel dan database Supabase.
+Guide ini akan menuntun Anda langkah demi langkah untuk men-deploy aplikasi AcaStore agar bisa diakses online secara gratis.
 
-> [!IMPORTANT]
-> Pastikan Anda memiliki akun [GitHub](https://github.com/), [Vercel](https://vercel.com/), dan [Supabase](https://supabase.com/).
+---
 
-## 1. Persiapan Database (Supabase)
+## ✅ Persiapan (Wajib)
 
-1.  Login ke **Supabase** dan buat **New Project**.
-2.  Isi nama project dan generate password database yang kuat (Simpan password ini!).
-3.  Tunggu hingga database selesai dibuat.
-4.  Buka menu **Project Settings** (icon gear di bawah) -> **Database**.
-5.  Cari bagian **Connection parameters**.
-6.  Anda akan membutuhkan data berikut nanti untuk Environment Variables di Vercel:
-    -   **Host** (misal: `db.kjsdhfkjsd.supabase.co`)
-    -   **Database Name** (biasanya `postgres`)
-    -   **Port** (6543)
-    -   **User** (biasanya `postgres`)
-    -   **Password** (yang Anda buat di langkah 2)
+Pastikan Anda sudah login ke 3 akun ini:
+1.  **[GitHub](https://github.com/)** (Untuk menyimpan kode)
+2.  **[Supabase](https://supabase.com/)** (Untuk database online)
+3.  **[Vercel](https://vercel.com/)** (Untuk hosting website)
 
-## 2. Persiapan Source Code (GitHub)
+---
 
-1.  Pastikan project Anda sudah di-push ke repository GitHub.
-2.  Jika belum:
+## Langkah 1: Setup Database (Supabase)
+
+Kita butuh database online pengganti MySQL lokal (Laragon).
+
+1.  Buka [Dashboard Supabase](https://supabase.com/dashboard) dan klik **"New Project"**.
+2.  Pilih Organization (atau buat baru).
+3.  **Isi Form**:
+    *   **Name**: `berkah-store` (atau bebas)
+    *   **Database Password**: **PENTING!** Bikin password kuat dan **SIMPAN** di Notepad karena tidak bisa dilihat lagi.
+    *   **Region**: Pilih `Singapore` (paling dekat dengan Indonesia).
+4.  Klik **"Create new project"** dan tunggu loading selesai (hijau).
+5.  **MENCARI KONEKSI DATABASE (Pilih salah satu cara):**
+
+    **Cara A (Paling Mudah):**
+    *   Klik tombol **"Connect"** di bagian atas dashboard.
+    *   Pilih tab **"ORM"**.
+    *   Pilih **"Prisma"** (Isinya sama formatnya).
+    *   Lihat bagian `DATABASE_URL`. Isinya seperti ini:
+        `postgresql://postgres.xxxx:[YOUR-PASSWORD]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres`
+    *   Dari situ, ambil datanya:
+        - **Host**: `aws-0-ap-southeast-1.pooler.supabase.com` (setelah `@` sampai `:6543`)
+        - **Port**: `6543`
+        - **User**: `postgres.xxxx` (sebelum `:`)
+        - **Database**: `postgres` (paling akhir)
+
+    **Cara B (Manual):**
+    *   Masuk ke **Project Settings** (icon gear ⚙️ di kiri bawah) > **Database**.
+    *   Scroll ke bagian **Connection parameters**.
+    *   *(Jika kosong, pastikan project sudah selesai dibuat)*.
+    *   Anda akan butuh data: `Host`, `Port`, `User`, `Database`.
+
+    *(Password adalah yang Anda buat di langkah 3)*
+
+---
+
+## Langkah 2: Siapkan Kode & Aset
+
+Agar tampilan web tidak "hancur" saat di-deploy, kita harus mem-build aset CSS/JS dan menguploadnya.
+
+1.  Buka Terminal di VS Code (`Ctrl` + `` ` ``).
+2.  Jalankan perintah ini untuk menyusun aset:
     ```bash
-    git init
-    git add .
-    git commit -m "Siap deploy"
-    git branch -M main
-    # Ganti URL di bawah dengan URL repo GitHub Anda
-    git remote add origin https://github.com/USERNAME/REPO-ANDA.git
-    git push -u origin main
+    npm run build
     ```
+3.  Sekarang upload kode ke GitHub:
+    ```bash
+    git add .
+    git commit -m "Persiapan deploy final"
+    git push origin main
+    ```
+    *(Pastikan tidak ada error saat push)*
 
-## 3. Deployment ke Vercel
+---
 
-1.  Login ke **Vercel** dan klik **Add New...** -> **Project**.
-2.  Import repository GitHub Anda.
-3.  Konfigurasi Project:
-    -   **Framework Preset**: Biarkan `Other`.
-    -   **Root Directory**: Biarkan `./`.
-4.  **Environment Variables**:
-    Klik bagian Environment Variables dan tambahkan satu per satu sesuai data dari Supabase dan Laravel:
+## Langkah 3: Deploy ke Vercel
 
-    | Key | Value (Contoh) |
-    | :--- | :--- |
-    | `APP_KEY` | `base64:...` (Salin dari file .env lokal Anda) |
-    | `APP_ENV` | `production` |
-    | `APP_DEBUG` | `true` (Ubah false nanti jika sudah lancar) |
-    | `APP_URL` | Kosongkan dulu (Vercel akan mengisi otomatis) |
-    | `DB_CONNECTION` | `pgsql` |
-    | `DB_HOST` | `db.xyz.supabase.co` (Host dari Supabase) |
-    | `DB_PORT` | `6543` |
-    | `DB_DATABASE` | `postgres` |
-    | `DB_USERNAME` | `postgres` |
-    | `DB_PASSWORD` | `password_anda` |
+1.  Buka [Dashboard Vercel](https://vercel.com/dashboard).
+2.  Klik **"Add New..."** > **"Project"**.
+3.  Di sebelah nama repo Anda (`berkah-store`), klik **"Import"**.
+4.  **Konfigurasi Project** (Penting!):
+    *   **Framework Preset**: Pilih `Other`.
+    *   **Root Directory**: Biarkan `./`.
+    *   **Environment Variables**: Klik tanda panah untuk membuka. Masukkan data ini satu per satu (Copy Paste):
 
-5.  Klik **Deploy**.
+    | Name (Kiri) | Value (Kanan) | Keterangan |
+    | :--- | :--- | :--- |
+    | `APP_KEY` | *(Salin dari file .env di laptop Anda)* | "base64:..." |
+    | `APP_ENV` | `production` | - |
+    | `APP_DEBUG` | `true` | Ubah false nanti jika sudah aman |
+    | `APP_URL` | `https://nama-project.vercel.app` | Ganti dengan domain Vercel nanti |
+    | `DB_CONNECTION` | `pgsql` | Wajib `pgsql` untuk Supabase |
+    | `DB_HOST` | *(Host dari Supabase tadi)* | `db.xyz.supabase.co` |
+    | `DB_PORT` | `6543` | - |
+    | `DB_DATABASE` | `postgres` | - |
+    | `DB_USERNAME` | `postgres` | - |
+    | `DB_PASSWORD` | *(Password Database Anda)* | Yang Anda simpan tadi |
 
-## 4. Migrasi Database
+5.  Klik **"Deploy"**.
+6.  Tunggu proses build selesai. Jika berhasil, Anda akan melihat kembang api 🎆.
 
-Karena kita tidak bisa login SSH ke Vercel, cara termudah migrasi database adalah menghubungkan laptop lokal Anda ke database Supabase sementara untuk menjalankan migrasi.
+---
 
-**Cara Termudah (Menghubungkan Lokal ke Supabase):**
+## Langkah 4: Migrasi Database (Isi Tabel)
 
-1.  Edit file `.env` di **KOMPUTER LOKAL ANDA** (jangan commit perubahan ini, hanya sementara).
-2.  Ubah konfigurasi DB menjadi data Supabase:
+Saat ini website sudah online, tapi **Databasenya masih kosong** (belum ada tabel user, produk, dll). Kita harus mengisi tabelnya dari laptop.
+
+1.  Di Vercel, buka menu **Settings** > **Domains**. Salin domain Anda (misal: `berkah-store.vercel.app`).
+2.  Update Environment Variable `APP_URL` di Vercel dengan domain tersebut, lalu Redeploy (Deployment > Redeploy).
+
+**Cara Mengisi Tabel (Migrasi):**
+
+Kita akan menghubungkan laptop Anda sebentar ke database Supabase untuk mengirim struktur tabel.
+
+1.  Buka file `.env` di laptop Anda.
+2.  Ubah bagian database menjadi data **Supabase** (sementara saja):
     ```env
     DB_CONNECTION=pgsql
-    DB_HOST=db.xyz.supabase.co
+    DB_HOST=db.xyz...supabase.co
     DB_PORT=6543
     DB_DATABASE=postgres
     DB_USERNAME=postgres
-    DB_PASSWORD=password_anda
+    DB_PASSWORD=password_shhh_rahasia
     ```
-3.  Jalankan migrasi dari terminal lokal:
+3.  Buka Terminal laptop, jalankan:
     ```bash
     php artisan migrate
     ```
-    *(Jika diminta konfirmasi karena production, ketik `yes`)*
-4.  Jalankan seeder (jika perlu):
+    *Ketik `yes` jika ditanya.*
+4.  Isi data awal (Admin dll):
     ```bash
     php artisan db:seed
     ```
-5.  **PENTING**: Kembalikan file `.env` lokal Anda ke settingan database lokal (`mysql` / localhost) agar development di laptop kembali normal.
+5.  **PENTING TERAKHIR**: Kembalikan file `.env` laptop Anda ke settingan awal (`mysql`, `127.0.0.1`, dll) agar Laragon Anda berjalan normal lagi.
 
-## 5. Cek Hasil
+---
 
-Buka URL yang diberikan Vercel. Aplikasi Anda seharusnya sudah berjalan!
+## 🎉 Selesai!
 
-> [!NOTE]
-> Jika ada error 500, cek "Logs" di dashboard Vercel untuk melihat detail error.
-> Biasanya karena salah copy `APP_KEY` atau koneksi database gagal.
+Buka Link Vercel Anda, dan website AcaStore sudah siap digunakan!
+Login Admin default:
+*   Email: `cacathehills1@gmail.com`
+*   Pass: `Tasyaputriaa123`
