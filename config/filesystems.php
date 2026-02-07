@@ -68,7 +68,7 @@ return [
             'bucket' => env('SUPABASE_STORAGE_BUCKET', 'produk_images'),
             // Smart Endpoint Fallback: Use explicit endpoint OR derive from storage URL if missing
             'endpoint' => env('SUPABASE_STORAGE_ENDPOINT',
-                str_replace('/object/public', '/s3', env('SUPABASE_STORAGE_URL'))
+                str_replace('/object/public', '/s3', env('SUPABASE_STORAGE_URL', ''))
             ),
             'url' => env('SUPABASE_STORAGE_URL'), // Custom URL for public access
             'visibility' => 'public',
