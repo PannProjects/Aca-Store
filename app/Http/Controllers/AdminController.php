@@ -119,9 +119,10 @@ class AdminController extends Controller
             'stok.min' => 'Stok minimal 1.',
         ]);
 
-        $imagePath = null;
         if ($request->hasFile('gambar')) {
             Log::info('Uploading image for new product...');
+            Log::info('Supabase Config Bucket: ' . config('filesystems.disks.supabase.bucket'));
+            Log::info('Supabase Config Region: ' . config('filesystems.disks.supabase.region'));
             try {
                 $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
                 Log::info('Upload success, path: ' . $imagePath);
