@@ -49,7 +49,19 @@ class Produk extends Model
 
         // Jika tidak ada di lokal, asumsi ini file baru di Supabase
         if (config('filesystems.disks.supabase.bucket')) {
-             $baseUrl = rtrim(config('filesystems.disks.supabase.url'), '/');
+             $baseUrl = config('filesystems.disks.supabase.url');
+             
+             // Jika BASE URL kosong di .env, kita coba akali dari Endpoint
+             if (empty($baseUrl)) {
+                 $endpoint = config('filesystems.disks.supabase.endpoint');
+                 // Endpoint: https://[ref].supabase.co/storage/v1/s3
+                 // Public:  https://[ref].supabase.co/storage/v1/object/public
+                 if ($endpoint) {
+                    $baseUrl = str_replace('/s3', '/object/public', $endpoint);
+                 }
+             }
+
+             $baseUrl = rtrim($baseUrl, '/');
              $bucket = config('filesystems.disks.supabase.bucket');
              $path = ltrim($this->lokasi_gambar, '/');
              
