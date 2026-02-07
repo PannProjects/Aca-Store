@@ -49,7 +49,11 @@ class Produk extends Model
 
         // Jika tidak ada di lokal, asumsi ini file baru di Supabase
         if (config('filesystems.disks.supabase.bucket')) {
-             return config('filesystems.disks.supabase.url') . '/' . config('filesystems.disks.supabase.bucket') . '/' . $this->lokasi_gambar;
+             $baseUrl = rtrim(config('filesystems.disks.supabase.url'), '/');
+             $bucket = config('filesystems.disks.supabase.bucket');
+             $path = ltrim($this->lokasi_gambar, '/');
+             
+             return "{$baseUrl}/{$bucket}/{$path}";
         }
 
         return asset('storage/' . $this->lokasi_gambar);
