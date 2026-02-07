@@ -124,6 +124,7 @@ class AdminController extends Controller
             Log::info('Uploading image for new product...');
             Log::info('Supabase Config Bucket: ' . config('filesystems.disks.supabase.bucket'));
             Log::info('Supabase Config Region: ' . config('filesystems.disks.supabase.region'));
+            Log::info('Supabase Config Endpoint: ' . config('filesystems.disks.supabase.endpoint'));
             try {
                 $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
                 Log::info('Upload success, path: ' . $imagePath);
