@@ -5,7 +5,7 @@ export default function GuestLayout({ children }) {
     const { theme, toggleTheme } = useTheme();
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-6 relative overflow-hidden transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center p-4 sm:p-6 relative overflow-hidden transition-colors duration-300">
             {/* Subtle Pattern Background */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
                 style={{ backgroundImage: 'radial-gradient(#64748b 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
@@ -31,7 +31,7 @@ export default function GuestLayout({ children }) {
                     <p className="mt-2 text-slate-500 dark:text-slate-400 text-sm">Masuk untuk melanjutkan</p>
                 </div>
 
-                <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+                <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
                     {children}
                 </div>
                 

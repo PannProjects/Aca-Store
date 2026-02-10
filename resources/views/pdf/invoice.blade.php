@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Invoice #{{ $transaksi->id }} - BerkahStore</title>
+    <title>Invoice #{{ $transaksi->id }} - AcaStore</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: Arial, sans-serif; font-size: 12px; color: #333; padding: 20px; }
@@ -51,7 +51,7 @@
         <table>
             <tr>
                 <td>
-                    <div class="logo">Berkah<span>Store</span></div>
+                    <div class="logo">Aca<span>Store</span></div>
                     <div class="tagline">Topup Game Amanah & Terpercaya</div>
                 </td>
                 <td class="invoice-title">
@@ -113,7 +113,7 @@
     
     <!-- Footer -->
     <div class="footer">
-        <p class="thanks">Terima kasih telah berbelanja di BerkahStore!</p>
+        <p class="thanks">Terima kasih telah berbelanja di AcaStore!</p>
         <p>Invoice ini sah tanpa tanda tangan.</p>
     </div>
 </body>

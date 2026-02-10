@@ -20,8 +20,8 @@ export default function Welcome({ produks }) {
             <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0f172a] selection:bg-primary-100 selection:text-primary-900 font-sans transition-colors duration-300">
                 
                 {/* Floating Navbar - Pill Shape */}
-                <div className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4">
-                    <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-slate-800/40 shadow-xl shadow-slate-200/40 dark:shadow-black/20 rounded-full px-6 py-3 flex items-center justify-between gap-8 max-w-4xl w-full">
+                <div className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
+                    <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-slate-800/40 shadow-xl shadow-slate-200/40 dark:shadow-black/20 rounded-full px-4 py-3 md:px-6 flex items-center justify-between gap-4 md:gap-8 max-w-4xl w-full">
                         <Link href="/" className="text-xl font-bold tracking-tighter text-slate-900 dark:text-white shrink-0">
                             Aca<span className="text-primary-600">Store.</span>
                         </Link>
@@ -63,7 +63,7 @@ export default function Welcome({ produks }) {
                 </div>
 
                 {/* Hero Section - Centered & Clean */}
-                <div className="relative pt-40 pb-20 px-4 overflow-hidden">
+                <div className="relative pt-32 md:pt-40 pb-20 px-4 overflow-hidden">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-primary-50/50 to-transparent dark:from-primary-900/20 dark:to-transparent rounded-full blur-3xl -z-10"></div>
                     
                     <div className="max-w-4xl mx-auto text-center relative z-10">
@@ -72,7 +72,7 @@ export default function Welcome({ produks }) {
                             Proses Otomatis 24/7
                         </div>
                         
-                        <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1] animate-fade-in-up delay-100">
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-[1.1] animate-fade-in-up delay-100">
                             Topup Game <br className="hidden md:block"/>
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-indigo-600 dark:from-primary-400 dark:to-indigo-400">
                                 Tanpa Ribet.
@@ -116,7 +116,7 @@ export default function Welcome({ produks }) {
                 </div>
 
                 {/* Products Grid - Masonry-ish Feel */}
-                <div id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+                <div id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
                     <div className="flex items-end justify-between mb-12">
                         <div>
                             <h2 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Pilih Produk</h2>
@@ -124,7 +124,7 @@ export default function Welcome({ produks }) {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
                         {filteredProduks?.map((produk) => (
                             <div key={produk.id} className="group relative">
                                 {produk.is_active ? (

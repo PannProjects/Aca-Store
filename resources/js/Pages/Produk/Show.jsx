@@ -36,7 +36,7 @@ export default function Show({ produk, avgRating }) {
                     </div>
                 </nav>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
                         {/* Image Column */}
                         <div className="lg:col-span-5">
@@ -63,7 +63,7 @@ export default function Show({ produk, avgRating }) {
                                 <span className="mr-1 group-hover:-translate-x-1 transition-transform">←</span> Kembali
                             </Link>
 
-                            <h1 className="text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">{produk?.nama}</h1>
+                            <h1 className="text-2xl md:text-3xl lg:text-4xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">{produk?.nama}</h1>
                             
                             <div className="flex items-center gap-4 mb-6">
                                 <span className="flex items-center gap-1 text-slate-700 dark:text-slate-200 font-medium bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full text-sm">
