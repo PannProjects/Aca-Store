@@ -160,16 +160,18 @@ export default function Produk({ produks }) {
                                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Non-Aktif</span>
                                 </div>
                             )}
-                            <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute top-2 right-2 flex gap-2">
                                 <button
                                     onClick={() => router.visit(`/admin/produk/${produk.id}/edit`)}
-                                    className="bg-white dark:bg-slate-800 p-2 rounded-full shadow-sm text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400"
+                                    className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-2 rounded-full shadow-sm text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-primary-400 border border-slate-200 dark:border-slate-700"
+                                    title="Edit Produk"
                                 >
                                     ✏️
                                 </button>
                                 <button
                                     onClick={() => handleDelete(produk.id)}
-                                    className="bg-white dark:bg-slate-800 p-2 rounded-full shadow-sm text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400"
+                                    className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm p-2 rounded-full shadow-sm text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 border border-slate-200 dark:border-slate-700"
+                                    title="Hapus Produk"
                                 >
                                     🗑️
                                 </button>

@@ -112,8 +112,8 @@ export default function Users({ users }) {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         {user.role !== 'admin' && (
-                                            <Button variant="danger" size="sm" onClick={() => handleDelete(user.id)}>
-                                                Hapus
+                                            <Button variant="danger" size="sm" onClick={() => handleDelete(user.id)} className="px-3" title="Hapus User">
+                                                🗑️
                                             </Button>
                                         )}
                                     </td>
