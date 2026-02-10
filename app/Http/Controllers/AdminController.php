@@ -150,6 +150,11 @@ class AdminController extends Controller
     {
         $produk = Produk::findOrFail($id);
         $produkNama = $produk->nama;
+        
+        if ($produk->lokasi_gambar && Storage::disk('supabase')->exists($produk->lokasi_gambar)) {
+            Storage::disk('supabase')->delete($produk->lokasi_gambar);
+        }
+
         $produk->delete();
         
         \App\Models\ActivityLog::log('delete_product', 'Menghapus produk: ' . $produkNama, [
@@ -230,10 +235,10 @@ class AdminController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            if ($produk->lokasi_gambar && Storage::disk('public')->exists($produk->lokasi_gambar)) {
-                Storage::disk('public')->delete($produk->lokasi_gambar);
+            if ($produk->lokasi_gambar && Storage::disk('supabase')->exists($produk->lokasi_gambar)) {
+                Storage::disk('supabase')->delete($produk->lokasi_gambar);
             }
-            $data['lokasi_gambar'] = $request->file('gambar')->store('produk_images', 'public');
+            $data['lokasi_gambar'] = $request->file('gambar')->store('produk_images', 'supabase');
         }
 
         $produk->update($data);

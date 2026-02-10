@@ -47,7 +47,7 @@ class TransaksiController extends Controller
 
         $buktiPath = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'public');
+            $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'supabase');
         }
 
         $total_harga = $produk->harga * $request->kuantitas;
