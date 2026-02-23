@@ -32,7 +32,7 @@ BARIS/ROW   = Satu data lengkap
 ┌────┬──────────┬──────────────────────┬──────────┐
 │ id │   name   │        email         │   role   │
 ├────┼──────────┼──────────────────────┼──────────┤
-│  1 │ Admin    │ admin@berkahstore.com│ admin    │
+│  1 │ Admin    │ admin@acastore.com   │ admin    │
 │  2 │ John     │ john@gmail.com       │ user     │
 │  3 │ Jane     │ jane@yahoo.com       │ user     │
 └────┴──────────┴──────────────────────┴──────────┘

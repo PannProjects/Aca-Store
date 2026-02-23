@@ -62,7 +62,7 @@ File: `resources/views/layouts/app.blade.php`
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BerkahStore - Topup Game Amanah</title>
+    <title>AcaStore - Topup Game Amanah</title>
     
     <!-- Tailwind CSS dari CDN -->
     <script src="https://cdn.tailwindcss.com"></script>

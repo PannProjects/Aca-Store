@@ -50,25 +50,24 @@ Download: https://code.visualstudio.com/
 
 ## 1.4 Membuat Proyek Laravel Baru
 
-Buka terminal (di Laragon: klik kanan → Terminal), lalu ketik:
-
+Buka terminal (di Laragon: klik kanan1. Buka Terminal/Command Prompt.
+2. Jalankan perintah berikut:
 ```bash
-cd C:\laragon\www
-composer create-project laravel/laravel BerkahStore
+composer create-project laravel/laravel AcaStore
 ```
 
 **Penjelasan:**
 - `cd C:\laragon\www` = Pindah ke folder www
 - `composer create-project` = Perintah untuk membuat proyek baru
 - `laravel/laravel` = Template Laravel
-- `BerkahStore` = Nama folder proyek
+- `AcaStore` = Nama folder proyek 
 
 ---
 
 ## 1.5 Menjalankan Server Lokal
 
 ```bash
-cd BerkahStore
+cd AcaStore
 php artisan serve
 ```
 
@@ -84,7 +83,7 @@ Jika muncul halaman Laravel, berarti instalasi berhasil! 🎉
 1. Buka Laragon → Start All
 2. Klik kanan → MySQL → Open HeidiSQL
 3. Klik kanan → Create New → Database
-4. Nama: `berkahstore`
+4. Nama: `acastore`
 
 ### Langkah 2: Edit File .env
 Buka file `.env` di folder proyek:
@@ -93,7 +92,7 @@ Buka file `.env` di folder proyek:
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE=berkahstore
+DB_DATABASE=acastore
 DB_USERNAME=root
 DB_PASSWORD=
 ```
@@ -108,7 +107,7 @@ DB_PASSWORD=
 ## 1.7 Struktur Folder Laravel
 
 ```
-BerkahStore/
+AcaStore/
 ├── app/                      ← KODE APLIKASI
 │   ├── Http/
 │   │   └── Controllers/      ← Pengontrol logika

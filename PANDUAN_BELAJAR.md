@@ -1,5 +1,5 @@
 # 📚 PANDUAN LENGKAP BELAJAR LARAVEL
-## Proyek: BerkahStore - Toko Topup Game Online
+## Proyek: AcaStore - Toko Topup Game Online
 
 ### Daftar Isi
 1. [PANDUAN_01_PERSIAPAN.md](./PANDUAN_01_PERSIAPAN.md) - Persiapan & Instalasi
@@ -14,7 +14,7 @@
 
 ## Tentang Proyek Ini
 
-**BerkahStore** adalah aplikasi web toko online untuk topup game yang dibangun dengan Laravel.
+**AcaStore** adalah aplikasi web toko online untuk topup game yang dibangun dengan Laravel.
 
 ### Fitur Utama:
 - 👤 Sistem Login/Register dengan 2 Role (User & Admin)

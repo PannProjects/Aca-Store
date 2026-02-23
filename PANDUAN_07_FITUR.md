@@ -1,6 +1,6 @@
 # 📚 BAB 7: PENJELASAN FITUR LENGKAP
 
-## 7.1 Alur Aplikasi BerkahStore
+## 7.1 Alur Aplikasi AcaStore
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -335,7 +335,7 @@ routes/
 
 ```bash
 # 1. Masuk ke folder proyek
-cd C:\laragon\www\BerkahStore
+cd C:\laragon\www\AcaStore
 
 # 2. Install dependensi
 composer install
