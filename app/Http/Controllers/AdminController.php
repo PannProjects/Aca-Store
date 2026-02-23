@@ -114,15 +114,18 @@ class AdminController extends Controller
             'harga' => 'required|numeric|min:1',
             'stok' => 'required|integer|min:1',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'kategori_input' => 'required|in:id_server,catatan',
             'is_active' => 'boolean',
         ], [
             'harga.min' => 'Harga harus lebih dari 0.',
             'stok.min' => 'Stok minimal 1.',
+            'kategori_input.in' => 'Kategori input tidak valid.',
         ]);
 
         if ($request->hasFile('gambar')) {
             try {
-                $imagePath = $request->file('gambar')->store('produk_images', 'supabase');
+                $disk = config('filesystems.default', 'public');
+                $imagePath = $request->file('gambar')->store('produk_images', $disk);
             } catch (\Exception $e) {
                 Log::error('Upload failed: ' . $e->getMessage());
                 return back()->withErrors(['gambar' => 'Upload failed: ' . $e->getMessage()]);
@@ -135,6 +138,7 @@ class AdminController extends Controller
             'harga' => $request->harga,
             'stok' => $request->stok,
             'lokasi_gambar' => $imagePath,
+            'kategori_input' => $request->kategori_input,
             'is_active' => $request->boolean('is_active', true),
             'user_id' => Auth::id(),
         ]);
@@ -151,8 +155,9 @@ class AdminController extends Controller
         $produk = Produk::findOrFail($id);
         $produkNama = $produk->nama;
         
-        if ($produk->lokasi_gambar && Storage::disk('supabase')->exists($produk->lokasi_gambar)) {
-            Storage::disk('supabase')->delete($produk->lokasi_gambar);
+        $disk = config('filesystems.default', 'public');
+        if ($produk->lokasi_gambar && Storage::disk($disk)->exists($produk->lokasi_gambar)) {
+            Storage::disk($disk)->delete($produk->lokasi_gambar);
         }
 
         $produk->delete();
@@ -218,10 +223,12 @@ class AdminController extends Controller
             'harga' => 'required|numeric|min:1',
             'stok' => 'required|integer|min:0',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'kategori_input' => 'required|in:id_server,catatan',
             'is_active' => 'boolean',
         ], [
             'harga.min' => 'Harga harus lebih dari 0.',
             'stok.min' => 'Stok tidak boleh minus.',
+            'kategori_input.in' => 'Kategori input tidak valid.',
         ]);
 
         $produk = Produk::findOrFail($id);
@@ -231,14 +238,16 @@ class AdminController extends Controller
             'deskripsi' => $request->deskripsi,
             'harga' => $request->harga,
             'stok' => $request->stok,
+            'kategori_input' => $request->kategori_input,
             'is_active' => $request->boolean('is_active'),
         ];
 
         if ($request->hasFile('gambar')) {
-            if ($produk->lokasi_gambar && Storage::disk('supabase')->exists($produk->lokasi_gambar)) {
-                Storage::disk('supabase')->delete($produk->lokasi_gambar);
+            $disk = config('filesystems.default', 'public');
+            if ($produk->lokasi_gambar && Storage::disk($disk)->exists($produk->lokasi_gambar)) {
+                Storage::disk($disk)->delete($produk->lokasi_gambar);
             }
-            $data['lokasi_gambar'] = $request->file('gambar')->store('produk_images', 'supabase');
+            $data['lokasi_gambar'] = $request->file('gambar')->store('produk_images', $disk);
         }
 
         $produk->update($data);

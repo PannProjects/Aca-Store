@@ -62,8 +62,8 @@ return [
 
         'supabase' => [
             'driver' => 's3',
-            'key' => trim(env('SUPABASE_STORAGE_KEY')),
-            'secret' => trim(env('SUPABASE_STORAGE_SECRET')),
+            'key' => trim(env('SUPABASE_STORAGE_KEY', '')),
+            'secret' => trim(env('SUPABASE_STORAGE_SECRET', '')),
             // 'region' => env('SUPABASE_STORAGE_REGION', 'ap-southeast-1'), // Default default
             'region' => env('SUPABASE_STORAGE_REGION', 'ap-southeast-1'),
             'bucket' => env('SUPABASE_STORAGE_BUCKET', 'produk_images'),

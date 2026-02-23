@@ -13,6 +13,7 @@ export default function Checkout({ produk }) {
         kuantitas: 1,
         game_id: '',
         server_id: '',
+        catatan: '',
         payment_method: '',
         bukti_pembayaran: null,
     });
@@ -53,24 +54,52 @@ export default function Checkout({ produk }) {
                                 <h3 className="font-bold text-slate-800 dark:text-white">Detail Akun Game</h3>
                             </Card.Header>
                             <Card.Body className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <Input
-                                        label="User ID"
-                                        placeholder="Contoh: 12345678"
-                                        value={data.game_id}
-                                        onChange={(e) => setData('game_id', e.target.value)}
-                                        error={errors.game_id}
-                                        required
-                                    />
-                                    <Input
-                                        label="Server ID"
-                                        placeholder="Contoh: 1234"
-                                        value={data.server_id}
-                                        onChange={(e) => setData('server_id', e.target.value)}
-                                        error={errors.server_id}
-                                        required
-                                    />
-                                </div>
+                                {produk?.kategori_input === 'id_server' ? (
+                                    <>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <Input
+                                                label="User ID"
+                                                placeholder="Contoh: 12345678"
+                                                value={data.game_id}
+                                                onChange={(e) => setData('game_id', e.target.value)}
+                                                error={errors.game_id}
+                                                required
+                                            />
+                                            <Input
+                                                label="Server ID"
+                                                placeholder="Contoh: 1234"
+                                                value={data.server_id}
+                                                onChange={(e) => setData('server_id', e.target.value)}
+                                                error={errors.server_id}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="space-y-1.5 mt-4">
+                                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Catatan Tambahan (Opsional)</label>
+                                            <textarea
+                                                rows={2}
+                                                placeholder="Contoh: Nickname akun, atau request khusus"
+                                                value={data.catatan}
+                                                onChange={(e) => setData('catatan', e.target.value)}
+                                                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                                            />
+                                            {errors.catatan && <p className="text-sm text-red-600">{errors.catatan}</p>}
+                                        </div>
+                                    </>
+                                ) : (
+                                    <div className="space-y-1.5">
+                                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Catatan Pesanan (Wajib)</label>
+                                        <textarea
+                                            rows={4}
+                                            placeholder="Masukkan Email, Password, atau catatan lainnya yang dibutuhkan"
+                                            value={data.catatan}
+                                            onChange={(e) => setData('catatan', e.target.value)}
+                                            className="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                                            required
+                                        />
+                                        {errors.catatan && <p className="text-sm text-red-600">{errors.catatan}</p>}
+                                    </div>
+                                )}
                             </Card.Body>
                         </Card>
 

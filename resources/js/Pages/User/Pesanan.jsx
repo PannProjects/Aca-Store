@@ -37,9 +37,16 @@ export default function Pesanan({ transaksis }) {
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h3 className="font-bold text-slate-900 dark:text-white text-lg">{transaksi.produk?.nama}</h3>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                                                ID: {transaksi.game_id} • Server: {transaksi.server_id}
-                                            </p>
+                                            <div className="text-sm text-slate-500 dark:text-slate-400 mt-0.5 space-y-1">
+                                                {transaksi.produk?.kategori_input === 'id_server' ? (
+                                                    <>
+                                                        <p>ID: {transaksi.game_id} • Server: {transaksi.server_id}</p>
+                                                        {transaksi.catatan && <p className="italic">Catatan: {transaksi.catatan}</p>}
+                                                    </>
+                                                ) : (
+                                                    <p>Catatan: {transaksi.catatan}</p>
+                                                )}
+                                            </div>
                                         </div>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${getStatusColor(transaksi.status)}`}>
                                             {transaksi.status}

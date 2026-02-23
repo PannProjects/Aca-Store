@@ -15,6 +15,7 @@ class Transaksi extends Model
         'status',
         'game_id',
         'server_id',
+        'catatan',
         'bukti_pembayaran',
     ];
 

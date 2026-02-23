@@ -11,6 +11,7 @@ export default function EditProduk({ produk }) {
         deskripsi: produk.deskripsi,
         harga: produk.harga,
         stok: produk.stok,
+        kategori_input: produk.kategori_input ?? 'id_server',
         gambar: null,
         is_active: produk.is_active,
     });
@@ -54,6 +55,20 @@ export default function EditProduk({ produk }) {
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-1.5">
+                                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">Tipe Input Pesanan</label>
+                                    <select
+                                        value={data.kategori_input}
+                                        onChange={(e) => setData('kategori_input', e.target.value)}
+                                        className="w-full px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all appearance-none"
+                                        required
+                                    >
+                                        <option value="id_server">ID Game + Server ID + Catatan (Opsional)</option>
+                                        <option value="catatan">Catatan Saja (Wajib)</option>
+                                    </select>
+                                    {errors.kategori_input && <p className="text-sm text-red-600">{errors.kategori_input}</p>}
+                                </div>
+
                                 <div className="space-y-6">
                                     <Input
                                         type="number"

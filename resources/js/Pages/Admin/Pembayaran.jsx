@@ -40,20 +40,36 @@ export default function Pembayaran({ pendingTransactions }) {
                                             </div>
                                         </div>
 
-                                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-6 pt-6 border-t border-slate-100 dark:border-slate-700">
+                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-100 dark:border-slate-700">
                                             <div>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Qty</p>
                                                 <p className="text-slate-900 dark:text-white font-medium">{trx.kuantitas}</p>
                                             </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Game ID</p>
-                                                <p className="text-slate-900 dark:text-white font-medium">{trx.game_id}</p>
-                                            </div>
-                                            <div>
-                                                <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Server ID</p>
-                                                <p className="text-slate-900 dark:text-white font-medium">{trx.server_id}</p>
-                                            </div>
-                                            <div>
+                                            {trx.produk?.kategori_input === 'id_server' ? (
+                                                <>
+                                                    <div>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Game ID</p>
+                                                        <p className="text-slate-900 dark:text-white font-medium">{trx.game_id}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Server ID</p>
+                                                        <p className="text-slate-900 dark:text-white font-medium">{trx.server_id}</p>
+                                                    </div>
+                                                    {trx.catatan && (
+                                                        <div className="col-span-2 md:col-span-4">
+                                                            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Catatan Tambahan</p>
+                                                            <p className="text-slate-900 dark:text-white font-medium">{trx.catatan}</p>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div className="col-span-2 md:col-span-3">
+                                                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Catatan</p>
+                                                    <p className="text-slate-900 dark:text-white font-medium">{trx.catatan}</p>
+                                                </div>
+                                            )}
+                                            
+                                            <div className="md:col-span-4 mt-2">
                                                 <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-bold mb-1">Total</p>
                                                 <p className="text-primary-600 dark:text-primary-400 font-bold">
                                                     Rp {trx.total_harga?.toLocaleString('id-ID', { maximumFractionDigits: 0 })}

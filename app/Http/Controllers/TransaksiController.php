@@ -26,13 +26,9 @@ class TransaksiController extends Controller
             'produk_id' => 'required|exists:produks,id',
             'kuantitas' => 'required|integer|min:1',
             'payment_method' => 'required|string',
-            'game_id' => 'required|string',
-            'server_id' => 'required|string',
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ], [
             'kuantitas.min' => 'Jumlah minimal 1.',
-            'game_id.required' => 'User ID Game wajib diisi.',
-            'server_id.required' => 'Server ID wajib diisi.',
             'payment_method.required' => 'Pilih metode pembayaran.',
             'bukti_pembayaran.required' => 'Bukti pembayaran wajib diupload.',
             'bukti_pembayaran.image' => 'File harus berupa gambar.',
@@ -40,14 +36,32 @@ class TransaksiController extends Controller
         ]);
 
         $produk = Produk::findOrFail($request->produk_id);
-        
+
+        if ($produk->kategori_input === 'id_server') {
+            $request->validate([
+                'game_id' => 'required|string',
+                'server_id' => 'required|string',
+                'catatan' => 'nullable|string',
+            ], [
+                'game_id.required' => 'User ID Game wajib diisi.',
+                'server_id.required' => 'Server ID wajib diisi.',
+            ]);
+        } else {
+            $request->validate([
+                'catatan' => 'required|string',
+            ], [
+                'catatan.required' => 'Catatan wajib diisi.',
+            ]);
+        }
+
         if($produk->stok < $request->kuantitas) {
             return back()->with('error', 'Stok tidak mencukupi');
         }
 
         $buktiPath = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', 'supabase');
+            $disk = config('filesystems.default', 'public');
+            $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', $disk);
         }
 
         $total_harga = $produk->harga * $request->kuantitas;
@@ -58,8 +72,9 @@ class TransaksiController extends Controller
             'kuantitas' => $request->kuantitas,
             'total_harga' => $total_harga,
             'payment_method' => $request->payment_method,
-            'game_id' => $request->game_id,
-            'server_id' => $request->server_id,
+            'game_id' => $produk->kategori_input === 'id_server' ? $request->game_id : null,
+            'server_id' => $produk->kategori_input === 'id_server' ? $request->server_id : null,
+            'catatan' => $request->catatan,
             'status' => 'pending',
             'bukti_pembayaran' => $buktiPath,
         ]);

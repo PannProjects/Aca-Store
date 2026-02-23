@@ -12,6 +12,7 @@ class Produk extends Model
         'harga',
         'lokasi_gambar',
         'stok',
+        'kategori_input',
         'is_active',
         'user_id',
     ];
