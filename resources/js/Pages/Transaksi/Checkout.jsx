@@ -202,7 +202,7 @@ export default function Checkout({ produk }) {
                             <div className="flex gap-4 mb-4 pb-4 border-b border-slate-100 dark:border-slate-700">
                                 <div className="w-16 h-16 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0">
                                     {produk?.lokasi_gambar && (
-                                        <img src={`/storage/${produk.lokasi_gambar}`} className="w-full h-full object-cover" />
+                                        <img src={produk.lokasi_gambar_url} className="w-full h-full object-cover" />
                                     )}
                                 </div>
                                 <div>

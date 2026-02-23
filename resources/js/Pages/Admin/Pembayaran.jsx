@@ -26,7 +26,7 @@ export default function Pembayaran({ pendingTransactions }) {
                                         <div className="flex items-start gap-4">
                                             <div className="w-14 h-14 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 border border-slate-200 dark:border-slate-600">
                                                 {trx.produk?.lokasi_gambar ? (
-                                                    <img src={`/storage/${trx.produk.lokasi_gambar}`} alt={trx.produk?.nama} className="w-full h-full object-cover" />
+                                                    <img src={trx.produk.lokasi_gambar_url} alt={trx.produk?.nama} className="w-full h-full object-cover" />
                                                 ) : (
                                                     <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs">No img</div>
                                                 )}
@@ -83,8 +83,8 @@ export default function Pembayaran({ pendingTransactions }) {
                                         <div className="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-xl border border-slate-200 dark:border-slate-700">
                                             <p className="text-xs text-center text-slate-400 dark:text-slate-500 mb-2 font-medium">Bukti Pembayaran</p>
                                             {trx.bukti_pembayaran ? (
-                                                <a href={`/storage/${trx.bukti_pembayaran}`} target="_blank" rel="noopener noreferrer" className="block relative group overflow-hidden rounded-lg">
-                                                    <img src={`/storage/${trx.bukti_pembayaran}`} alt="Bukti" className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" />
+                                                <a href={trx.bukti_pembayaran_url} target="_blank" rel="noopener noreferrer" className="block relative group overflow-hidden rounded-lg">
+                                                    <img src={trx.bukti_pembayaran_url} alt="Bukti" className="w-full h-32 object-cover transition-transform duration-500 group-hover:scale-110" />
                                                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                                                         <span className="opacity-0 group-hover:opacity-100 text-white text-xs font-bold bg-black/50 px-2 py-1 rounded">Lihat</span>
                                                     </div>

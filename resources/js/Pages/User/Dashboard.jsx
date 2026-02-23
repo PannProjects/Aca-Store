@@ -56,7 +56,7 @@ export default function Dashboard({ transaksis, totalPengeluaran }) {
                                     <div key={transaksi.id} className="p-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors flex items-center gap-4">
                                         <div className="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0">
                                              {transaksi.produk?.lokasi_gambar && (
-                                                <img src={`/storage/${transaksi.produk.lokasi_gambar}`} className="w-full h-full object-cover" />
+                                                <img src={transaksi.produk.lokasi_gambar_url} className="w-full h-full object-cover" />
                                             )}
                                         </div>
                                         <div className="flex-1 min-w-0">

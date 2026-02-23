@@ -26,7 +26,7 @@ export default function Pesanan({ transaksis }) {
                                 {/* Image */}
                                 <div className="w-20 h-20 rounded-lg bg-slate-100 dark:bg-slate-700 overflow-hidden flex-shrink-0 border border-slate-100 dark:border-slate-700">
                                     {transaksi.produk?.lokasi_gambar ? (
-                                        <img src={`/storage/${transaksi.produk.lokasi_gambar}`} className="w-full h-full object-cover" />
+                                        <img src={transaksi.produk.lokasi_gambar_url} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="flex items-center justify-center w-full h-full text-slate-400 text-xs">No Img</div>
                                     )}
