@@ -10,7 +10,7 @@
             "dest": "/storage/app/public/$1"
         },
         {
-            "src": "/(build|assets|css|js|images)/(.*)",
+            "src": "/(build|assets|css|js|images|logo\\.png|logo\\.jpeg)/(.*)?",
             "dest": "/$1/$2"
         },
         {
