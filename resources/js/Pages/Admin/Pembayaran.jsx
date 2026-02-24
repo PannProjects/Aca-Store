@@ -1,14 +1,41 @@
 import { Head, router } from '@inertiajs/react';
+import { useState } from 'react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Card from '../../Components/Card';
 import Button from '../../Components/Button';
 
 export default function Pembayaran({ pendingTransactions }) {
+    const [rejectModalOpen, setRejectModalOpen] = useState(false);
+    const [selectedTrxId, setSelectedTrxId] = useState(null);
+    const [rejectReason, setRejectReason] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const handleAction = (id, status) => {
-        const action = status === 'paid' ? 'konfirmasi' : 'tolak';
-        if (confirm(`Yakin ingin ${action} pembayaran ini?`)) {
-            router.post(`/admin/transaction/${id}/${status}`);
+        if (status === 'paid') {
+            if (confirm(`Yakin ingin mengkonfirmasi pembayaran ini?`)) {
+                router.post(`/admin/transaction/${id}/${status}`);
+            }
+        } else {
+            setSelectedTrxId(id);
+            setRejectReason('');
+            setRejectModalOpen(true);
         }
+    };
+
+    const submitReject = () => {
+        if (!rejectReason.trim()) {
+            alert('Alasan penolakan wajib diisi');
+            return;
+        }
+        setIsSubmitting(true);
+        router.post(`/admin/transaction/${selectedTrxId}/reject`, {
+            alasan_penolakan: rejectReason
+        }, {
+            onFinish: () => {
+                setRejectModalOpen(false);
+                setIsSubmitting(false);
+            }
+        });
     };
 
     return (
@@ -111,6 +138,45 @@ export default function Pembayaran({ pendingTransactions }) {
             ) : (
                 <div className="p-12 text-center bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
                     <p className="text-slate-400">Tidak ada pembayaran pending</p>
+                </div>
+            )}
+
+            {/* Reject Modal */}
+            {rejectModalOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl w-full max-w-md shadow-2xl p-6 border border-slate-200 dark:border-slate-700">
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Revisi / Tolak Pembayaran</h3>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+                            Sistem akan mengembalikan stok produk kepada sistem secara otomatis dan mengubah status transaksi pembeli menjadi gagal.
+                        </p>
+                        
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Alasan Penolakan</label>
+                            <textarea
+                                value={rejectReason}
+                                onChange={(e) => setRejectReason(e.target.value)}
+                                className="w-full rounded-xl border-slate-300 dark:border-slate-600 dark:bg-slate-700 dark:text-white shadow-sm focus:border-red-500 focus:ring-red-500 min-h-[100px]"
+                                placeholder="Contoh: Bukti transfer tidak valid/blur."
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-3">
+                            <Button 
+                                variant="secondary" 
+                                onClick={() => !isSubmitting && setRejectModalOpen(false)}
+                                disabled={isSubmitting}
+                            >
+                                Batal
+                            </Button>
+                            <Button 
+                                variant="danger" 
+                                onClick={submitReject}
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Menolak...' : 'Konfirmasi Tolak'}
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             )}
         </AuthenticatedLayout>

@@ -9,6 +9,7 @@ export default function Pesanan({ transaksis }) {
             pending: 'bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/30',
             paid: 'bg-emerald-50 text-emerald-700 border-emerald-100 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/30',
             cancelled: 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30',
+            failed: 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800/30',
             default: 'bg-slate-50 text-slate-700 border-slate-100 dark:bg-slate-700/50 dark:text-slate-400 dark:border-slate-600/50',
         };
         return colors[status] || colors.default;
@@ -49,9 +50,17 @@ export default function Pesanan({ transaksis }) {
                                             </div>
                                         </div>
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide border ${getStatusColor(transaksi.status)}`}>
-                                            {transaksi.status}
+                                            {transaksi.status === 'failed' ? 'ditolak' : transaksi.status}
                                         </span>
                                     </div>
+
+                                    {/* Alasan Penolakan Alert */}
+                                    {transaksi.status === 'failed' && transaksi.alasan_penolakan && (
+                                        <div className="mt-4 p-3 bg-red-50/50 dark:bg-red-900/10 rounded-lg border border-red-100 dark:border-red-900/30">
+                                            <p className="text-xs font-bold text-red-800 dark:text-red-400 mb-1 uppercase tracking-wide">Alasan Penolakan:</p>
+                                            <p className="text-sm text-red-600 dark:text-red-400/80">{transaksi.alasan_penolakan}</p>
+                                        </div>
+                                    )}
                                     
                                     <div className="mt-4 flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-slate-50 dark:border-slate-700">
                                         <div className="flex gap-6">

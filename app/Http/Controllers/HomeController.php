@@ -12,8 +12,16 @@ class HomeController extends Controller
     public function index()
     {
         $produks = Produk::latest()->get();
+        
+        $reviews = Rating::with(['user', 'produk'])
+            ->where('rating', 5)
+            ->latest()
+            ->take(6)
+            ->get();
+
         return Inertia::render('Welcome', [
             'produks' => $produks,
+            'reviews' => $reviews,
         ]);
     }
 

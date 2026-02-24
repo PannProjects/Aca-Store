@@ -9,7 +9,13 @@ export default function Show({ produk, avgRating }) {
 
     return (
         <>
-            <Head title={produk?.nama || 'Detail Produk'} />
+            <Head>
+                <title>{`Beli ${produk?.nama || 'Produk'} Termurah`}</title>
+                <meta head-key="description" name="description" content={produk?.deskripsi?.substring(0, 150) + '...'} />
+                <meta head-key="og:title" property="og:title" content={`Beli ${produk?.nama} Termurah - AcaStore`} />
+                <meta head-key="og:description" property="og:description" content={produk?.deskripsi?.substring(0, 150) + '...'} />
+                {produk?.lokasi_gambar_url && <meta head-key="og:image" property="og:image" content={produk.lokasi_gambar_url} />}
+            </Head>
 
             <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
                 {/* Navbar (Simplified for internal page) */}

@@ -106,6 +106,38 @@ class AdminController extends Controller
         }
     }
 
+    public function rejectPayment(Request $request, $id)
+    {
+        $request->validate([
+            'alasan_penolakan' => 'required|string|max:1000'
+        ], [
+            'alasan_penolakan.required' => 'Alasan penolakan wajib diisi.'
+        ]);
+
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->update([
+            'status' => 'failed',
+            'alasan_penolakan' => $request->alasan_penolakan
+        ]);
+        
+        $transaksi->produk->increment('stok', $transaksi->kuantitas);
+        
+        \App\Models\ActivityLog::log('reject_payment', 'Menolak pembayaran #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT), [
+            'transaksi_id' => $transaksi->id,
+            'user_name' => $transaksi->user->name,
+        ]);
+
+        \App\Models\Notification::send(
+            $transaksi->user_id,
+            'payment_rejected',
+            'Pembayaran Ditolak ❌',
+            'Pesanan #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT) . ' dibatalkan. Alasan: ' . $request->alasan_penolakan,
+            ['transaksi_id' => $transaksi->id]
+        );
+
+        return back()->with('success', 'Transaksi berhasil ditolak dan stok dikembalikan.');
+    }
+
     public function storeProduk(Request $request)
     {
         $request->validate([

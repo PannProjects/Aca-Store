@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function () {
         // Payment Verification
         Route::get('/pembayaran', [AdminController::class, 'pembayaranIndex'])->name('admin.pembayaran');
         Route::post('/transaction/{id}/{status}', [AdminController::class, 'confirmPayment'])->name('admin.transaction.confirm');
+        Route::post('/transaction/{id}/reject', [AdminController::class, 'rejectPayment'])->name('admin.transaction.reject');
         
         // Activity Log
         Route::get('/log', [AdminController::class, 'logIndex'])->name('admin.log');

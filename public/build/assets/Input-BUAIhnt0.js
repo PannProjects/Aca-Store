@@ -1,4 +1,4 @@
-import{r as l,j as e}from"./app-DGT4iy_f.js";const p=l.forwardRef(function({type:o="text",label:a,error:s,className:n="",...d},i){const[t,c]=l.useState(!1),r=o==="password";return e.jsxs("div",{className:"space-y-1.5",children:[a&&e.jsx("label",{className:"block text-sm font-medium text-slate-700 dark:text-slate-300",children:a}),e.jsxs("div",{className:"relative",children:[e.jsx("input",{ref:i,type:r?t?"text":"password":o,className:`
+import{r as l,j as e}from"./app-Df3UiQSk.js";const p=l.forwardRef(function({type:o="text",label:a,error:s,className:n="",...d},i){const[t,c]=l.useState(!1),r=o==="password";return e.jsxs("div",{className:"space-y-1.5",children:[a&&e.jsx("label",{className:"block text-sm font-medium text-slate-700 dark:text-slate-300",children:a}),e.jsxs("div",{className:"relative",children:[e.jsx("input",{ref:i,type:r?t?"text":"password":o,className:`
                         w-full px-4 py-2.5 rounded-lg
                         bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700
                         text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500

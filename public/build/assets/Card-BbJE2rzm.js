@@ -1,4 +1,4 @@
-import{j as d}from"./app-DGT4iy_f.js";function o({className:a="",hover:r=!1,children:e,...s}){return d.jsx("div",{className:`
+import{j as d}from"./app-Df3UiQSk.js";function o({className:a="",hover:r=!1,children:e,...s}){return d.jsx("div",{className:`
                 bg-white rounded-xl border border-slate-200 shadow-sm
                 dark:bg-slate-800 dark:border-slate-700
                 ${r?"hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 transition-all duration-300":""}

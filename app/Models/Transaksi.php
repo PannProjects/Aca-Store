@@ -17,6 +17,7 @@ class Transaksi extends Model
         'server_id',
         'catatan',
         'bukti_pembayaran',
+        'alasan_penolakan',
     ];
 
     public function user()
