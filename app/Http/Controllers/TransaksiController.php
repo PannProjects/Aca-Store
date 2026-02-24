@@ -60,7 +60,7 @@ class TransaksiController extends Controller
 
         $buktiPath = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $disk = config('filesystems.default', 'public');
+            $disk = config('filesystems.default'); // Uses Supabase in production
             $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', $disk);
         }
 
@@ -87,7 +87,12 @@ class TransaksiController extends Controller
             'total' => $total_harga,
         ]);
 
-        return redirect()->route('user.dashboard')->with('success', 'Pesanan berhasil dibuat. Admin akan memverifikasi pembayaran Anda.');
+        $waAdmin = env('WA_ADMIN_NUMBER', '6281234567890');
+        $detailAkun = $produk->kategori_input === 'id_server' ? "ID: {$request->game_id} Server: {$request->server_id}" : "Catatan: {$request->catatan}";
+        $text = "Halo Admin AcaStore!\n\nSaya baru saja membuat pesanan:\n- Produk: {$produk->nama}\n- Qty: {$request->kuantitas}\n- {$detailAkun}\n- Total Tagihan: Rp " . number_format($total_harga, 0, ',', '.') . "\n- Metode: " . strtoupper($request->payment_method) . "\n\nMohon segera diproses ya min! Bukti transfer sudah saya upload di sistem.";
+        $waUrl = "https://api.whatsapp.com/send?phone={$waAdmin}&text=" . urlencode($text);
+
+        return redirect()->route('user.pesanan')->with('success', 'Pesanan berhasil dibuat. Admin akan memverifikasi pembayaran Anda.')->with('whatsapp_url', $waUrl);
     }
 
     public function printPdf($id)

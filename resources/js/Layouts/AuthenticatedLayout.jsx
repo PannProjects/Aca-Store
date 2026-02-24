@@ -5,6 +5,7 @@ import Sidebar from '../Components/Sidebar';
 import Alert from '../Components/Alert';
 import NotificationDropdown from '../Components/NotificationDropdown';
 import { useTheme } from '../Hooks/useTheme';
+import GlobalToast from '../Components/GlobalToast';
 
 export default function AuthenticatedLayout({ children, title }) {
     const { auth, flash } = usePage().props;
@@ -95,20 +96,10 @@ export default function AuthenticatedLayout({ children, title }) {
                 </header>
 
                 {/* Page Content */}
-                <main className="flex-1 p-4 md:p-6 lg:p-8 lg:pt-4 overflow-y-auto">
+                <main className="flex-1 p-4 md:p-6 lg:p-8 lg:pt-4 overflow-y-auto relative z-10">
                     <div className="max-w-7xl mx-auto">
-                        {/* Flash Messages */}
-                        {flash?.success && (
-                            <div className="animate-fade-in-down">
-                                <Alert type="success" message={flash.success} className="mb-6 shadow-sm border border-emerald-100 dark:border-emerald-900/30" />
-                            </div>
-                        )}
-                        {flash?.error && (
-                             <div className="animate-fade-in-down">
-                                <Alert type="error" message={flash.error} className="mb-6 shadow-sm border border-red-100 dark:border-red-900/30" />
-                             </div>
-                        )}
-
+                        <GlobalToast />
+                        
                         {children}
                     </div>
                 </main>

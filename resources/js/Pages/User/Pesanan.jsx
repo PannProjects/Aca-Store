@@ -1,9 +1,17 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Card from '../../Components/Card';
 import Button from '../../Components/Button';
 
 export default function Pesanan({ transaksis }) {
+    const { flash } = usePage().props;
+
+    useEffect(() => {
+        if (flash?.whatsapp_url) {
+            window.open(flash.whatsapp_url, '_blank');
+        }
+    }, [flash]);
     const getStatusColor = (status) => {
         const colors = {
             pending: 'bg-amber-50 text-amber-700 border-amber-100 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/30',

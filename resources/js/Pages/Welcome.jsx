@@ -3,6 +3,7 @@ import Card from '../Components/Card';
 import Button from '../Components/Button';
 import { useState } from 'react';
 import { useTheme } from '../Hooks/useTheme';
+import GlobalToast from '../Components/GlobalToast';
 
 export default function Welcome({ produks, reviews }) {
     const { auth } = usePage().props;
@@ -23,10 +24,10 @@ export default function Welcome({ produks, reviews }) {
             </Head>
 
             <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0f172a] selection:bg-primary-100 selection:text-primary-900 font-sans transition-colors duration-300">
-                
+                <GlobalToast />
                 {/* Floating Navbar - Pill Shape */}
                 <div className="fixed top-4 md:top-6 left-0 right-0 z-50 flex justify-center px-4">
-                    <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-white/40 dark:border-slate-800/40 shadow-xl shadow-slate-200/40 dark:shadow-black/20 rounded-full px-4 py-3 md:px-6 flex items-center justify-between gap-4 md:gap-8 max-w-4xl w-full">
+                    <nav className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border border-white/30 dark:border-slate-800/40 shadow-xl shadow-slate-200/40 dark:shadow-black/20 rounded-full px-4 py-3 md:px-6 flex items-center justify-between gap-4 md:gap-8 max-w-4xl w-full transition-colors duration-500">
                         <Link href="/" className="text-xl font-bold tracking-tighter text-slate-900 dark:text-white shrink-0">
                             Aca<span className="text-primary-600">Store.</span>
                         </Link>
@@ -178,7 +179,7 @@ export default function Welcome({ produks, reviews }) {
                                     </Link>
                                 ) : null}
                                 
-                                <div className={`aspect-[3/4] rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm transition-all duration-300 ${produk.is_active ? 'hover:shadow-xl hover:translate-y-[-4px]' : 'opacity-75 grayscale'}`}>
+                                <div className={`aspect-[3/4] rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm transition-all duration-500 ease-out ${produk.is_active ? 'hover:shadow-2xl hover:shadow-primary-500/20 hover:-translate-y-2 ring-1 ring-transparent hover:ring-primary-500/30' : 'opacity-75 grayscale'}`}>
                                     <div className="w-full h-full bg-slate-100 dark:bg-slate-900 relative">
                                         {produk.lokasi_gambar ? (
                                             <img

@@ -28,7 +28,7 @@ export default function Button({
             disabled={disabled}
             className={`
                 inline-flex items-center justify-center gap-2 font-medium rounded-lg
-                transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500
+                transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary-500 active:scale-95
                 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none disabled:bg-slate-100 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-600
                 ${variants[variant]}
                 ${sizes[size]}

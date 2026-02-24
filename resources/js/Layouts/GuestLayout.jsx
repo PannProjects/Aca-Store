@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { useTheme } from '../Hooks/useTheme';
+import GlobalToast from '../Components/GlobalToast';
 
 export default function GuestLayout({ children }) {
     const { theme, toggleTheme } = useTheme();
@@ -32,6 +33,7 @@ export default function GuestLayout({ children }) {
                 </div>
 
                 <div className="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+                    <GlobalToast />
                     {children}
                 </div>
                 
