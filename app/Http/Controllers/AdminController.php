@@ -64,46 +64,28 @@ class AdminController extends Controller
     {
         $transaksi = Transaksi::findOrFail($id);
         
-        if ($status == 'paid') {
-            $transaksi->update(['status' => 'paid']);
-            
-            // Log Activity
-            \App\Models\ActivityLog::log('confirm_payment', 'Mengkonfirmasi pembayaran #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT), [
-                'transaksi_id' => $transaksi->id,
-                'user_name' => $transaksi->user->name,
-            ]);
-
-            // Send Notification
-            \App\Models\Notification::send(
-                $transaksi->user_id,
-                'payment_confirmed',
-                'Pembayaran Diterima ✅',
-                'Pembayaran untuk pesanan #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT) . ' telah diverifikasi admin.',
-                ['transaksi_id' => $transaksi->id]
-            );
-
-            return back()->with('success', 'Pembayaran dikonfirmasi.');
-        } else {
-            $transaksi->update(['status' => 'cancelled']);
-            $transaksi->produk->increment('stok', $transaksi->kuantitas);
-            
-            // Log Activity
-            \App\Models\ActivityLog::log('reject_payment', 'Menolak pembayaran #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT), [
-                'transaksi_id' => $transaksi->id,
-                'user_name' => $transaksi->user->name,
-            ]);
-
-            // Send Notification
-            \App\Models\Notification::send(
-                $transaksi->user_id,
-                'payment_rejected',
-                'Pembayaran Ditolak ❌',
-                'Maaf, pembayaran untuk pesanan #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT) . ' ditolak. Mohon cek kembali bukti transfer Anda.',
-                ['transaksi_id' => $transaksi->id]
-            );
-
-            return back()->with('success', 'Transaksi dibatalkan.');
+        if ($status !== 'paid') {
+            abort(400, 'Hanya status PAID yang diizinkan melalui rute ini.');
         }
+
+        $transaksi->update(['status' => 'paid']);
+        
+        // Log Activity
+        \App\Models\ActivityLog::log('confirm_payment', 'Mengkonfirmasi pembayaran #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT), [
+            'transaksi_id' => $transaksi->id,
+            'user_name' => $transaksi->user->name,
+        ]);
+
+        // Send Notification
+        \App\Models\Notification::send(
+            $transaksi->user_id,
+            'payment_confirmed',
+            'Pembayaran Diterima ✅',
+            'Pembayaran untuk pesanan #' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT) . ' telah diverifikasi admin.',
+            ['transaksi_id' => $transaksi->id]
+        );
+
+        return back()->with('success', 'Pembayaran dikonfirmasi.');
     }
 
     public function rejectPayment(Request $request, $id)
@@ -156,7 +138,7 @@ class AdminController extends Controller
 
         if ($request->hasFile('gambar')) {
             try {
-                $disk = config('filesystems.default', 'public');
+                $disk = config('filesystems.default');
                 $imagePath = $request->file('gambar')->store('produk_images', $disk);
             } catch (\Exception $e) {
                 Log::error('Upload failed: ' . $e->getMessage());
@@ -187,7 +169,7 @@ class AdminController extends Controller
         $produk = Produk::findOrFail($id);
         $produkNama = $produk->nama;
         
-        $disk = config('filesystems.default', 'public');
+        $disk = config('filesystems.default');
         if ($produk->lokasi_gambar && Storage::disk($disk)->exists($produk->lokasi_gambar)) {
             Storage::disk($disk)->delete($produk->lokasi_gambar);
         }
@@ -275,7 +257,7 @@ class AdminController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            $disk = config('filesystems.default', 'public');
+            $disk = config('filesystems.default');
             if ($produk->lokasi_gambar && Storage::disk($disk)->exists($produk->lokasi_gambar)) {
                 Storage::disk($disk)->delete($produk->lokasi_gambar);
             }

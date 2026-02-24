@@ -60,7 +60,7 @@ class TransaksiController extends Controller
 
         $buktiPath = null;
         if ($request->hasFile('bukti_pembayaran')) {
-            $disk = env('FILESYSTEM_DISK', 'supabase'); // Force supabase if Vercel env is missing
+            $disk = config('filesystems.default');
             $buktiPath = $request->file('bukti_pembayaran')->store('bukti_pembayaran', $disk);
         }
 

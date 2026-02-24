@@ -133,7 +133,7 @@ export default function Welcome({ produks, reviews }) {
                                                     </svg>
                                                 ))}
                                             </div>
-                                            <p className="text-slate-700 dark:text-slate-300 italic mb-6 leading-relaxed">"{review.komentar}"</p>
+                                            <p className="text-slate-700 dark:text-slate-300 italic mb-6 leading-relaxed">"{review.review || 'Pembeli tidak meninggalkan ulasan teks.'}"</p>
                                         </div>
                                         <div className="flex items-center gap-3 pt-4 border-t border-slate-200 dark:border-slate-700 mt-auto">
                                             <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold uppercase shrink-0">

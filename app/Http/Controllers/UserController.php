@@ -45,19 +45,26 @@ class UserController extends Controller
     public function rate(Request $request)
     {
         $request->validate([
-            'produk_id' => 'required',
+            'produk_id' => 'required|exists:produks,id',
             'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string'
+            'review' => 'nullable|string|max:1000'
         ]);
+
+        $hasPurchased = Transaksi::where('user_id', Auth::id())
+            ->where('produk_id', $request->produk_id)
+            ->whereIn('status', ['paid', 'completed'])
+            ->exists();
+
+        if (!$hasPurchased) {
+            return back()->with('error', 'Anda harus membeli produk ini terlebih dahulu sebelum memberikan ulasan.');
+        }
 
         $produk = Produk::find($request->produk_id);
 
-        Rating::create([
-            'user_id' => Auth::id(),
-            'produk_id' => $request->produk_id,
-            'rating' => $request->rating,
-            'review' => $request->review
-        ]);
+        Rating::updateOrCreate(
+            ['user_id' => Auth::id(), 'produk_id' => $request->produk_id],
+            ['rating' => $request->rating, 'review' => $request->review]
+        );
 
         ActivityLog::log('rating', 'Memberi rating ' . $request->rating . '★ untuk ' . $produk->nama, [
             'produk_id' => $request->produk_id,
