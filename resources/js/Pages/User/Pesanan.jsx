@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Card from '../../Components/Card';
 import Button from '../../Components/Button';
+import Pagination from '../../Components/Pagination';
 
 export default function Pesanan({ transaksis }) {
     const { flash } = usePage().props;
@@ -56,9 +57,9 @@ export default function Pesanan({ transaksis }) {
         <AuthenticatedLayout title="Pesanan Saya">
             <Head title="Pesanan Saya" />
 
-            {transaksis?.length > 0 ? (
+            {transaksis?.data?.length > 0 ? (
                 <div className="space-y-4">
-                    {transaksis.map((transaksi) => (
+                    {transaksis.data.map((transaksi) => (
                         <div key={transaksi.id} className="bg-white dark:bg-slate-800 rounded-xl p-4 sm:p-6 border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                             <div className="flex flex-col sm:flex-row gap-6">
                                 {/* Image */}
@@ -152,6 +153,8 @@ export default function Pesanan({ transaksis }) {
                     </Link>
                 </div>
             )}
+
+            <Pagination links={transaksis?.links} />
 
             {/* Rating Modal */}
             {ratingModalOpen && (

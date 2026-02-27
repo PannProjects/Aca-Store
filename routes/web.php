@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminProdukController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminPembayaranController;
+use App\Http\Controllers\AdminLaporanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\NotificationController;
@@ -50,28 +54,28 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
         
         // Produk Management
-        Route::get('/produk', [AdminController::class, 'produkIndex'])->name('admin.produk.index');
-        Route::post('/produk', [AdminController::class, 'storeProduk'])->name('admin.produk.store');
-        Route::get('/produk/{id}/edit', [AdminController::class, 'editProduk'])->name('admin.produk.edit');
-        Route::put('/produk/{id}', [AdminController::class, 'updateProduk'])->name('admin.produk.update');
-        Route::delete('/produk/{id}', [AdminController::class, 'destroyProduk'])->name('admin.produk.destroy');
+        Route::get('/produk', [AdminProdukController::class, 'index'])->name('admin.produk.index');
+        Route::post('/produk', [AdminProdukController::class, 'store'])->name('admin.produk.store');
+        Route::get('/produk/{id}/edit', [AdminProdukController::class, 'edit'])->name('admin.produk.edit');
+        Route::put('/produk/{id}', [AdminProdukController::class, 'update'])->name('admin.produk.update');
+        Route::delete('/produk/{id}', [AdminProdukController::class, 'destroy'])->name('admin.produk.destroy');
         
         // User Management
-        Route::get('/users', [AdminController::class, 'usersIndex'])->name('admin.users.index');
-        Route::post('/add-admin', [AdminController::class, 'storeAdmin'])->name('admin.store');
-        Route::delete('/user/{id}', [AdminController::class, 'destroyUser'])->name('admin.user.destroy');
-        Route::post('/user/{id}/reset-password', [AdminController::class, 'resetUserPassword'])->name('admin.user.reset-password');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('admin.users.index');
+        Route::post('/add-admin', [AdminUserController::class, 'storeAdmin'])->name('admin.store');
+        Route::delete('/user/{id}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
+        Route::post('/user/{id}/reset-password', [AdminUserController::class, 'resetPassword'])->name('admin.user.reset-password');
         
         // Payment Verification
-        Route::get('/pembayaran', [AdminController::class, 'pembayaranIndex'])->name('admin.pembayaran');
-        Route::post('/transaction/{id}/{status}', [AdminController::class, 'confirmPayment'])->name('admin.transaction.confirm');
-        Route::post('/transaction/{id}/reject', [AdminController::class, 'rejectPayment'])->name('admin.transaction.reject');
-        Route::delete('/transaction/{id}', [AdminController::class, 'destroyTransaksi'])->name('admin.transaction.destroy');
+        Route::get('/pembayaran', [AdminPembayaranController::class, 'index'])->name('admin.pembayaran');
+        Route::post('/transaction/{id}/reject', [AdminPembayaranController::class, 'reject'])->name('admin.transaction.reject');
+        Route::post('/transaction/{id}/{status}', [AdminPembayaranController::class, 'confirm'])->name('admin.transaction.confirm');
+        Route::delete('/transaction/{id}', [AdminPembayaranController::class, 'destroy'])->name('admin.transaction.destroy');
         
         // Activity Log
         Route::get('/log', [AdminController::class, 'logIndex'])->name('admin.log');
         
         // Financial Report
-        Route::get('/laporan', [AdminController::class, 'laporanKeuangan'])->name('admin.laporan');
+        Route::get('/laporan', [AdminLaporanController::class, 'index'])->name('admin.laporan');
     });
 });

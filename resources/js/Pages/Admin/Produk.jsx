@@ -4,6 +4,7 @@ import Card from '../../Components/Card';
 import Button from '../../Components/Button';
 import Input from '../../Components/Input';
 import { useState } from 'react';
+import Pagination from '../../Components/Pagination';
 
 export default function Produk({ produks }) {
     const [showForm, setShowForm] = useState(false);
@@ -155,7 +156,7 @@ export default function Produk({ produks }) {
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {produks?.map((produk) => (
+                {produks?.data?.map((produk) => (
                     <Card key={produk.id} hover className={`border-0 shadow-sm overflow-hidden group h-full flex flex-col bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 ${!produk.is_active ? 'opacity-75 grayscale' : ''}`}>
                         <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-700 relative overflow-hidden">
                             {produk.lokasi_gambar ? (
@@ -206,11 +207,13 @@ export default function Produk({ produks }) {
                 ))}
             </div>
 
-            {produks?.length === 0 && (
+            {produks?.data?.length === 0 && (
                 <div className="p-12 text-center bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
                     <p className="text-slate-400">Belum ada produk</p>
                 </div>
             )}
+
+            <Pagination links={produks?.links} />
         </AuthenticatedLayout>
     );
 }

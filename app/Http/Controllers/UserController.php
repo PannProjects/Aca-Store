@@ -28,7 +28,7 @@ class UserController extends Controller
     public function activityLog()
     {
         $user = Auth::user();
-        $activities = ActivityLog::where('user_id', $user->id)->latest()->get();
+        $activities = ActivityLog::where('user_id', $user->id)->latest()->paginate(20);
         return Inertia::render('User/ActivityLog', [
             'activities' => $activities,
         ]);
@@ -37,7 +37,7 @@ class UserController extends Controller
     public function pesanan()
     {
         $user = Auth::user();
-        $transaksis = $user->transaksis()->with('produk')->latest()->get();
+        $transaksis = $user->transaksis()->with('produk')->latest()->paginate(15);
         return Inertia::render('User/Pesanan', [
             'transaksis' => $transaksis,
         ]);

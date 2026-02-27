@@ -3,6 +3,7 @@ import { useState } from 'react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
 import Card from '../../Components/Card';
 import Button from '../../Components/Button';
+import Pagination from '../../Components/Pagination';
 
 const statusConfig = {
     pending: { label: 'Menunggu', color: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400' },
@@ -91,9 +92,9 @@ export default function Pembayaran({ transactions, pendingCount, activeStatus })
             </div>
 
             {/* Transactions */}
-            {transactions?.length > 0 ? (
+            {transactions?.data?.length > 0 ? (
                 <div className="space-y-4">
-                    {transactions.map((trx) => {
+                    {transactions.data.map((trx) => {
                         const cfg = statusConfig[trx.status] || statusConfig.pending;
                         return (
                             <Card key={trx.id} className="border-0 shadow-sm overflow-hidden">
@@ -226,6 +227,8 @@ export default function Pembayaran({ transactions, pendingCount, activeStatus })
                     </p>
                 </div>
             )}
+
+            <Pagination links={transactions?.links} />
 
             {/* Reject Modal */}
             {rejectModalOpen && (

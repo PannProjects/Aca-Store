@@ -59,10 +59,6 @@ class TransaksiController extends Controller
             ]);
         }
 
-        if($produk->stok < $request->kuantitas) {
-            return back()->with('error', 'Stok tidak mencukupi');
-        }
-
         $buktiPath = null;
         if ($request->hasFile('bukti_pembayaran')) {
             $disk = config('filesystems.default');
@@ -71,20 +67,34 @@ class TransaksiController extends Controller
 
         $total_harga = $produk->harga * $request->kuantitas;
 
-        $transaksi = Transaksi::create([
-            'user_id' => Auth::id(),
-            'produk_id' => $produk->id,
-            'kuantitas' => $request->kuantitas,
-            'total_harga' => $total_harga,
-            'payment_method' => $request->payment_method,
-            'game_id' => $produk->kategori_input === 'id_server' ? $request->game_id : null,
-            'server_id' => $produk->kategori_input === 'id_server' ? $request->server_id : null,
-            'catatan' => $request->catatan,
-            'status' => 'pending',
-            'bukti_pembayaran' => $buktiPath,
-        ]);
+        // Gunakan DB transaction dengan lockForUpdate untuk mencegah race condition pada stok
+        try {
+            $transaksi = \Illuminate\Support\Facades\DB::transaction(function () use ($request, $produk, $total_harga, $buktiPath) {
+                // Lock row produk untuk mencegah concurrent reads
+                $lockedProduk = Produk::lockForUpdate()->find($produk->id);
 
-        $produk->decrement('stok', $request->kuantitas);
+                if ($lockedProduk->stok < $request->kuantitas) {
+                    throw new \Exception('Stok tidak mencukupi');
+                }
+
+                $lockedProduk->decrement('stok', $request->kuantitas);
+
+                return Transaksi::create([
+                    'user_id' => Auth::id(),
+                    'produk_id' => $lockedProduk->id,
+                    'kuantitas' => $request->kuantitas,
+                    'total_harga' => $total_harga,
+                    'payment_method' => $request->payment_method,
+                    'game_id' => $lockedProduk->kategori_input === 'id_server' ? $request->game_id : null,
+                    'server_id' => $lockedProduk->kategori_input === 'id_server' ? $request->server_id : null,
+                    'catatan' => $request->catatan,
+                    'status' => 'pending',
+                    'bukti_pembayaran' => $buktiPath,
+                ]);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
 
         ActivityLog::log('checkout', 'Membeli ' . $produk->nama . ' x' . $request->kuantitas, [
             'transaksi_id' => $transaksi->id,

@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react';
 import AuthenticatedLayout from '../../Layouts/AuthenticatedLayout';
+import Pagination from '../../Components/Pagination';
 
 export default function Log({ activities }) {
     const getActionBadge = (action) => {
@@ -43,7 +44,7 @@ export default function Log({ activities }) {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-                            {activities?.map((activity) => (
+                            {activities?.data?.map((activity) => (
                                 <tr key={activity.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                                     <td className="px-6 py-4 text-slate-500 dark:text-slate-400 text-sm whitespace-nowrap font-mono">
                                         {new Date(activity.created_at).toLocaleString('id-ID', {
@@ -68,11 +69,13 @@ export default function Log({ activities }) {
                 </div>
             </div>
 
-            {activities?.length === 0 && (
+            {activities?.data?.length === 0 && (
                 <div className="p-12 text-center mt-6">
                     <p className="text-slate-400 dark:text-slate-500">Belum ada aktivitas</p>
                 </div>
             )}
+
+            <Pagination links={activities?.links} />
         </AuthenticatedLayout>
     );
 }

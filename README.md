@@ -69,7 +69,7 @@ Ikuti langkah, berikut untuk menjalankan project di komputer lokal Anda:
    ```bash
    php artisan migrate:fresh --seed
    ```
-   *Default Admin: email `cacathehills1@gmail.com` | pass `Tasyaputriaa123`*
+   *Default Admin: Gunakan kredensial yang ada di file `.env` atau seeder.*
 
 5. **Jalankan Server**
    ```bash
