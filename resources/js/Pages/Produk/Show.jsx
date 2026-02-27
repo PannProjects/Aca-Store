@@ -74,7 +74,7 @@ export default function Show({ produk, avgRating }) {
                             <div className="flex items-center gap-4 mb-6">
                                 <span className="flex items-center gap-1 text-slate-700 dark:text-slate-200 font-medium bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-full text-sm">
                                     <span className="text-amber-400">★</span>
-                                    {avgRating ? avgRating.toFixed(1) : 'Belum ada rating'}
+                                    {avgRating ? Number(avgRating).toFixed(1) : 'Belum ada rating'}
                                 </span>
                                 <span className={`text-sm px-3 py-1 rounded-full font-medium ${produk?.stok > 0 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
                                     {produk?.stok > 0 ? `Stok: ${produk.stok}` : 'Stok Habis'}

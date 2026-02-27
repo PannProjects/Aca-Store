@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Produk;
 use App\Models\Transaksi;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -44,12 +45,56 @@ class AdminController extends Controller
         ]);
     }
 
-    public function pembayaranIndex()
+    public function pembayaranIndex(Request $request)
     {
-        $pendingTransactions = Transaksi::where('status', 'pending')->with(['user', 'produk'])->latest()->get();
+        $status = $request->get('status', 'pending');
+
+        $query = Transaksi::with(['user', 'produk'])->latest();
+
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $transactions = $query->get();
+        $pendingCount = Transaksi::where('status', 'pending')->count();
+
         return Inertia::render('Admin/Pembayaran', [
-            'pendingTransactions' => $pendingTransactions,
+            'transactions' => $transactions,
+            'pendingCount' => $pendingCount,
+            'activeStatus' => $status,
         ]);
+    }
+
+    public function destroyTransaksi($id)
+    {
+        $transaksi = Transaksi::findOrFail($id);
+
+        // Kembalikan stok jika status pending/paid
+        if (in_array($transaksi->status, ['pending', 'paid']) && $transaksi->produk) {
+            $transaksi->produk->increment('stok', $transaksi->kuantitas);
+        }
+
+        $orderId = '#INV-' . str_pad($transaksi->id, 5, '0', STR_PAD_LEFT);
+        $userName = $transaksi->user ? $transaksi->user->name : 'Unknown';
+
+        // Notify user
+        if ($transaksi->user_id) {
+            \App\Models\Notification::send(
+                $transaksi->user_id,
+                'transaction_deleted',
+                'Transaksi Dihapus 🗑️',
+                "Pesanan {$orderId} telah dihapus oleh admin.",
+                ['transaksi_id' => $transaksi->id]
+            );
+        }
+
+        $transaksi->delete();
+
+        \App\Models\ActivityLog::log('delete_transaction', "Menghapus transaksi {$orderId} milik {$userName}", [
+            'transaksi_id' => $id,
+        ]);
+
+        return back()->with('success', "Transaksi {$orderId} berhasil dihapus.");
     }
 
     public function logIndex()
@@ -136,6 +181,7 @@ class AdminController extends Controller
             'kategori_input.in' => 'Kategori input tidak valid.',
         ]);
 
+        $imagePath = null;
         if ($request->hasFile('gambar')) {
             try {
                 $disk = config('filesystems.default');
@@ -161,6 +207,8 @@ class AdminController extends Controller
             'produk_id' => $produk->id,
         ]);
 
+        Cache::forget('home.produks');
+
         return back()->with('success', 'Produk berhasil ditambahkan.');
     }
 
@@ -179,12 +227,18 @@ class AdminController extends Controller
         \App\Models\ActivityLog::log('delete_product', 'Menghapus produk: ' . $produkNama, [
             'produk_id' => $id,
         ]);
+
+        Cache::forget('home.produks');
         
         return back()->with('success', 'Produk berhasil dihapus.');
     }
 
     public function destroyUser($id)
     {
+        if ((int) $id === Auth::id()) {
+            return back()->with('error', 'Anda tidak bisa menghapus akun sendiri.');
+        }
+
         $user = User::findOrFail($id);
         $userName = $user->name;
         $user->delete();
@@ -194,6 +248,20 @@ class AdminController extends Controller
         ]);
         
         return back()->with('success', 'User berhasil dihapus.');
+    }
+
+    public function resetUserPassword($id)
+    {
+        $user = User::findOrFail($id);
+        $newPassword = \Illuminate\Support\Str::random(8);
+        $user->password = \Illuminate\Support\Facades\Hash::make($newPassword);
+        $user->save();
+
+        \App\Models\ActivityLog::log('reset_password', 'Mereset password user: ' . $user->name, [
+            'user_id' => $id,
+        ]);
+
+        return back()->with('success', "Password {$user->name} berhasil direset menjadi: {$newPassword}");
     }
 
     public function storeAdmin(Request $request)
@@ -270,13 +338,13 @@ class AdminController extends Controller
             'produk_id' => $produk->id,
         ]);
 
+        Cache::forget('home.produks');
+
         return redirect()->route('admin.dashboard')->with('success', 'Produk berhasil diperbarui.');
     }
 
     public function laporanKeuangan(Request $request)
     {
-        $startDate = $request->get('start_date');
-        $endDate = $request->get('end_date');
         $bulan = $request->get('bulan', now()->month);
         $tahun = $request->get('tahun', now()->year);
 
@@ -286,69 +354,95 @@ class AdminController extends Controller
             9 => 'September', 10 => 'Oktober', 11 => 'November', 12 => 'Desember'
         ];
 
+        // Query transaksi yang sudah terbayar
         $query = Transaksi::whereIn('status', ['paid', 'completed'])
             ->with(['user', 'produk'])
             ->latest();
 
-        if ($startDate && $endDate) {
-            $query->whereDate('created_at', '>=', $startDate)
-                  ->whereDate('created_at', '<=', $endDate);
-        } else {
-            $query->whereYear('created_at', $tahun);
-            if ($bulan != 'all') {
-                $query->whereMonth('created_at', $bulan);
-            }
+        $query->whereYear('created_at', $tahun);
+        if ($bulan != 'all') {
+            $query->whereMonth('created_at', $bulan);
         }
 
         $transaksis = $query->get();
         $totalPendapatan = $transaksis->sum('total_harga');
         $totalTransaksi = $transaksis->count();
+        $totalItemTerjual = $transaksis->sum('kuantitas');
+        $rataRataOrder = $totalTransaksi > 0 ? round($totalPendapatan / $totalTransaksi) : 0;
 
-        $produkBreakdown = $transaksis->groupBy('produk_id')->map(function ($items) {
+        // Breakdown per produk
+        $produkBreakdown = $transaksis->groupBy('produk_id')->map(function ($items) use ($totalPendapatan) {
             $produk = $items->first()->produk;
+            $subtotal = $items->sum('total_harga');
             return [
                 'nama' => $produk ? $produk->nama : 'Produk Dihapus',
                 'jumlah_terjual' => $items->sum('kuantitas'),
-                'total_pendapatan' => $items->sum('total_harga'),
+                'total_pendapatan' => $subtotal,
+                'persentase' => $totalPendapatan > 0 ? round(($subtotal / $totalPendapatan) * 100, 1) : 0,
             ];
         })->sortByDesc('total_pendapatan')->values();
 
+        // Monthly breakdown (selalu 12 bulan untuk chart)
+        $yearQuery = Transaksi::whereIn('status', ['paid', 'completed'])
+            ->whereYear('created_at', $tahun)
+            ->get();
+
         $monthlyBreakdown = [];
-        if ($bulan == 'all') {
-            foreach ($namaBulan as $key => $val) {
-                $monthlyBreakdown[$key] = [
-                    'nama_bulan' => $val,
-                    'total_pendapatan' => 0,
-                    'jumlah_transaksi' => 0
-                ];
-            }
+        foreach ($namaBulan as $key => $val) {
+            $monthlyBreakdown[] = [
+                'bulan' => $key,
+                'nama_bulan' => substr($val, 0, 3),
+                'total_pendapatan' => 0,
+                'jumlah_transaksi' => 0,
+            ];
+        }
 
-            $grouped = $transaksis->groupBy(function($date) {
-                return $date->created_at->format('n');
-            });
+        $grouped = $yearQuery->groupBy(function ($item) {
+            return \Carbon\Carbon::parse($item->created_at)->format('n');
+        });
 
-            foreach ($grouped as $monthNum => $items) {
-                $monthlyBreakdown[$monthNum]['total_pendapatan'] = $items->sum('total_harga');
-                $monthlyBreakdown[$monthNum]['jumlah_transaksi'] = $items->count();
+        foreach ($grouped as $monthNum => $items) {
+            $idx = (int) $monthNum - 1;
+            if (isset($monthlyBreakdown[$idx])) {
+                $monthlyBreakdown[$idx]['total_pendapatan'] = $items->sum('total_harga');
+                $monthlyBreakdown[$idx]['jumlah_transaksi'] = $items->count();
             }
         }
 
+        // Transaksi terbaru (max 10)
+        $recentTransactions = $transaksis->take(10)->map(function ($t) {
+            return [
+                'id' => $t->id,
+                'user' => $t->user ? $t->user->name : '-',
+                'produk' => $t->produk ? $t->produk->nama : 'Dihapus',
+                'kuantitas' => $t->kuantitas,
+                'total_harga' => $t->total_harga,
+                'status' => $t->status,
+                'tanggal' => $t->created_at->format('d M Y, H:i'),
+            ];
+        })->values();
+
+        // Dynamic years
         $firstTransaction = Transaksi::oldest()->first();
         $startYear = $firstTransaction ? $firstTransaction->created_at->year : now()->year;
         $years = range($startYear, now()->year);
 
+        // Pending count
+        $pendingCount = Transaksi::where('status', 'pending')->count();
+
         return Inertia::render('Admin/Laporan', [
-            'transaksis' => $transaksis,
             'totalPendapatan' => $totalPendapatan,
             'totalTransaksi' => $totalTransaksi,
+            'totalItemTerjual' => $totalItemTerjual,
+            'rataRataOrder' => $rataRataOrder,
             'produkBreakdown' => $produkBreakdown,
+            'monthlyStats' => $monthlyBreakdown,
+            'recentTransactions' => $recentTransactions,
+            'pendingCount' => $pendingCount,
             'bulan' => $bulan,
-            'tahun' => $tahun,
+            'tahun' => (int) $tahun,
             'years' => $years,
             'namaBulan' => $namaBulan,
-            'monthlyBreakdown' => $monthlyBreakdown,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
         ]);
     }
 }

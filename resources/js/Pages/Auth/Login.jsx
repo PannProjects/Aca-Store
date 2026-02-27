@@ -47,6 +47,11 @@ export default function Login() {
                         autoComplete="current-password"
                         required
                     />
+                    <div className="flex justify-end pt-1">
+                        <Link href="/forgot-password" className="text-xs font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+                            Lupa Password?
+                        </Link>
+                    </div>
                 </div>
 
                 <Button type="submit" variant="primary" size="lg" className="w-full mt-2" disabled={processing}>

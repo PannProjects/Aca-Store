@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use App\Models\Rating;
 use App\Models\Produk;
 use App\Models\Transaksi;
@@ -70,6 +71,8 @@ class UserController extends Controller
             'produk_id' => $request->produk_id,
             'rating' => $request->rating,
         ]);
+
+        Cache::forget('home.reviews');
 
         return back()->with('success', 'Terima kasih atas penilaian Anda.');
     }

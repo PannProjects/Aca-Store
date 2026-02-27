@@ -15,6 +15,11 @@ class TransaksiController extends Controller
     public function checkout($id)
     {
         $produk = Produk::findOrFail($id);
+
+        if (!$produk->is_active) {
+            return redirect()->route('home')->with('error', 'Produk sedang dalam maintenance.');
+        }
+
         return Inertia::render('Transaksi/Checkout', [
             'produk' => $produk,
         ]);
@@ -24,7 +29,7 @@ class TransaksiController extends Controller
     {
         $request->validate([
             'produk_id' => 'required|exists:produks,id',
-            'kuantitas' => 'required|integer|min:1',
+            'kuantitas' => 'required|integer|min:1|max:' . (Produk::find($request->produk_id)?->stok ?? 0),
             'payment_method' => 'required|string',
             'bukti_pembayaran' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ], [
@@ -87,7 +92,7 @@ class TransaksiController extends Controller
             'total' => $total_harga,
         ]);
 
-        $waAdmin = env('WA_ADMIN_NUMBER', '6281234567890');
+        $waAdmin = config('services.acastore.wa_admin_number', '6281234567890');
         $detailAkun = $produk->kategori_input === 'id_server' ? "ID: {$request->game_id} Server: {$request->server_id}" : "Catatan: {$request->catatan}";
         $text = "Halo Admin AcaStore!\n\nSaya baru saja membuat pesanan:\n- Produk: {$produk->nama}\n- Qty: {$request->kuantitas}\n- {$detailAkun}\n- Total Tagihan: Rp " . number_format($total_harga, 0, ',', '.') . "\n- Metode: " . strtoupper($request->payment_method) . "\n\nMohon segera diproses ya min! Bukti transfer sudah saya upload di sistem.";
         $waUrl = "https://api.whatsapp.com/send?phone={$waAdmin}&text=" . urlencode($text);
@@ -107,7 +112,8 @@ class TransaksiController extends Controller
             'transaksi_id' => $transaksi->id,
         ]);
 
-        $pdf = Pdf::loadView('pdf.invoice', compact('transaksi'));
-        return $pdf->download('invoice-'.$transaksi->id.'.pdf');
+        return Inertia::render('Transaksi/Invoice', [
+            'transaksi' => $transaksi
+        ]);
     }
 }

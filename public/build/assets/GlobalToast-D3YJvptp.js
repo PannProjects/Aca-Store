@@ -1,0 +1,1 @@
+import{b as o,r as e,z as s}from"./app-DbnFtf98.js";function a(){const{flash:r}=o().props;return e.useEffect(()=>{r?.success&&s.success(r.success,{style:{borderRadius:"10px",background:"#333",color:"#fff"}}),r?.error&&s.error(r.error,{style:{borderRadius:"10px",background:"#333",color:"#fff"}})},[r]),null}export{a as G};

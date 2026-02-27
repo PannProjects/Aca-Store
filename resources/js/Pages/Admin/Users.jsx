@@ -110,7 +110,14 @@ export default function Users({ users }) {
                                     <td className="px-6 py-4 text-slate-500 dark:text-slate-400 text-sm">
                                         {new Date(user.created_at).toLocaleDateString('id-ID')}
                                     </td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-6 py-4 text-right space-x-2">
+                                        <Button variant="secondary" size="sm" onClick={() => {
+                                            if (confirm(`Reset password untuk ${user.name}?`)) {
+                                                router.post(`/admin/user/${user.id}/reset-password`);
+                                            }
+                                        }} className="px-3" title="Reset Password">
+                                            🔑
+                                        </Button>
                                         {user.role !== 'admin' && (
                                             <Button variant="danger" size="sm" onClick={() => handleDelete(user.id)} className="px-3" title="Hapus User">
                                                 🗑️

@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'acastore' => [
+        'wa_admin_number' => env('WA_ADMIN_NUMBER', '6281234567890'),
+    ],
+
 ];
