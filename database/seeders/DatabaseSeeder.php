@@ -20,14 +20,14 @@ class DatabaseSeeder extends Seeder
         // Admin
         User::create([
             'name' => 'Aca & Pandu',
-            'email' => 'cacathehills1@gmail.com',
-            'password' => Hash::make('Tasyaputriaa123'),
+            'email' => 'admin@acastore.my.id',
+            'password' => Hash::make('adminacastore'),
             'role' => 'admin',
         ]);
         // User
         User::create([
             'name' => 'Pandu Setya',
-            'email' => 'pandu@gmail.com',
+            'email' => 'pandu@acastore.my.id',
             'password' => Hash::make('pandusetya'),
             'role' => 'user',
         ]);
